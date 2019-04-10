@@ -74,6 +74,9 @@ class Scraper(scrapelib.Scraper):
 
         self.output_target = self.get_output_target(os.environ.get('OUTPUT_TARGET'))
 
+        # TODO: Mimic output target setup
+        # TODO: self.output_cache_target = self.get_output_cache_target(os.environ.get('OUTPUT_CACHE_TARGET'))
+
     def get_output_target(self, output_target_name):
         if output_target_name == 'GOOGLE_CLOUD_PUBSUB':
             from pupa.scrape.outputs.google_cloud_pubsub import GoogleCloudPubSub
@@ -91,8 +94,10 @@ class Scraper(scrapelib.Scraper):
         for obj in self.scrape(**kwargs) or []:
             if hasattr(obj, '__iter__'):
                 for iterobj in obj:
+                    # TODO: Pass in self.output_cache_target
                     self.output_target.save_object(iterobj)
             else:
+                # TODO: Pass in self.output_cache_target
                 self.output_target.save_object(obj)
         record['end'] = utils.utcnow()
         record['skipped'] = getattr(self, 'skipped', 0)

@@ -32,10 +32,17 @@ class Output(metaclass=ABCMeta):
     def handle_output(self, obj):
         pass
 
+    # TODO: Extra arg for `cache`
     def save_object(self, obj):
         obj.pre_save(self.scraper.jurisdiction.jurisdiction_id)
 
         # actual output handling, to be handled by subclass
+        # TODO: Idea, `cache` is passed in as arg
+        #
+        # TODO: if !cache.exists(obj):
+        #           cache.set(obj)
+        #           then self.handle_output
+        #
         self.handle_output(obj)
 
         # validate after writing, allows for inspection on failure
