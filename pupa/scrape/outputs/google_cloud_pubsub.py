@@ -15,7 +15,7 @@ class GoogleCloudPubSub(Output):
         self.publisher = pubsub.PublisherClient()
         self.topic_path = self.publisher.topic_path(project, topic_name)
 
-    def handle_output(self, obj):
+    def handle_output(self, obj, **kwargs):
         self.scraper.info('publish %s %s to topic %s', obj._type, obj,
                           self.topic_path)
         self.debug_obj(obj)

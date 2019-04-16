@@ -7,7 +7,7 @@ from pupa.scrape.outputs.output import Output
 
 class LocalFile(Output):
 
-    def handle_output(self, obj):
+    def handle_output(self, obj, **kwargs):
         filename = '{0}_{1}.json'.format(obj._type, obj._id).replace('/', '-')
 
         self.scraper.info('save %s %s as %s', obj._type, obj, filename)

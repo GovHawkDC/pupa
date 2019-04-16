@@ -22,7 +22,7 @@ class AmazonSQS(Output):
         self.s3 = boto3.resource('s3')
         self.bucket_name = os.environ.get('AMAZON_S3_BUCKET')
 
-    def handle_output(self, obj):
+    def handle_output(self, obj, **kwargs):
         self.scraper.info('send %s %s to queue %s', obj._type, obj,
                           self.queue_name)
         self.debug_obj(obj)

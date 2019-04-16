@@ -30,7 +30,7 @@ class Output(metaclass=ABCMeta):
         return obj_dict
 
     @abstractmethod
-    def handle_output(self, obj):
+    def handle_output(self, obj, **kwargs):
         # TODO: Pass more context to output so multiplle topics/queues can be used
         pass
 
