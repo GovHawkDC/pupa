@@ -33,4 +33,4 @@ class Redis(Cache):
             return value
 
     def set(self, key, value, **kwargs):
-        pass
+        return self.conn.set(key, value)
