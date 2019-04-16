@@ -73,9 +73,7 @@ class Scraper(scrapelib.Scraper):
         self.critical = self.logger.critical
 
         self.output_target = self.get_output_target(os.environ.get('OUTPUT_TARGET'))
-
-        # TODO: Mimic output target setup
-        # TODO: self.output_cache_target = self.get_output_cache_target(os.environ.get('OUTPUT_CACHE_TARGET'))
+        self.cache_target = self.get_cache_target(os.environ.get('CACHE_TARGET'))
 
     def get_cache_target(self, cache_target_name):
         if cache_target_name == 'REDIS':
