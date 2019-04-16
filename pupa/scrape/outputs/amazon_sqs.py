@@ -16,18 +16,21 @@ class AmazonSQS(Output):
         super().__init__(scraper)
 
         self.sqs = boto3.resource('sqs')
-        self.queue_name = os.environ.get('AMAZON_SQS_QUEUE')
-        self.queue = self.sqs.get_queue_by_name(QueueName=self.queue_name)
+        self.queue_prefix = os.environ.get('AMAZON_SQS_QUEUE_PREFIX', '')
+        self.default_queue_name = os.environ.get('AMAZON_SQS_QUEUE')
+        self.queues = {}
 
         self.s3 = boto3.resource('s3')
         self.bucket_name = os.environ.get('AMAZON_S3_BUCKET')
 
     def handle_output(self, obj, **kwargs):
-        self.scraper.info('send %s %s to queue %s', obj._type, obj,
-                          self.queue_name)
+        name = self.queue_prefix + kwargs.get('type', self.default_queue_name)
+        queue = self._get_queue(name)
+
+        self.scraper.info('send %s %s to queue %s', obj._type, obj, name)
         self.debug_obj(obj)
 
-        self.add_output_name(obj, self.queue_name)
+        self.add_output_name(obj, name)
         obj_str = self.stringify_obj(obj, True, True)
         encoded_obj_str = obj_str.encode('utf-8')
 
@@ -38,6 +41,17 @@ class AmazonSQS(Output):
                               self.bucket_name, key)
 
             self.s3.Object(self.bucket_name, key).put(Body=encoded_obj_str)
-            self.queue.send_message(MessageBody=key)
+            queue.send_message(MessageBody=key)
         else:
-            self.queue.send_message(MessageBody=obj_str)
+            queue.send_message(MessageBody=obj_str)
+
+    def _get_queue(self, name):
+        queue = self.queues.get(name)
+
+        if queue is not None:
+            return queue
+
+        queue = self.sqs.get_queue_by_name(QueueName=name)
+        self.queues[name] = queue
+
+        return queue
