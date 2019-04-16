@@ -31,7 +31,6 @@ class Output(metaclass=ABCMeta):
 
     @abstractmethod
     def handle_output(self, obj, **kwargs):
-        # TODO: Pass more context to output so multiplle topics/queues can be used
         pass
 
     def pre_handle_output(self, obj, **kwargs):
@@ -59,7 +58,7 @@ class Output(metaclass=ABCMeta):
 
         # Cache and handle as normal
         cache_target.set(obj_attrs.get('key'), obj_hash)
-        self.handle_output(obj)
+        self.handle_output(obj, **obj_attrs)
 
     def save_object(self, obj, **kwargs):
         obj.pre_save(self.scraper.jurisdiction.jurisdiction_id)
