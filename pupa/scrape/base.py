@@ -98,11 +98,9 @@ class Scraper(scrapelib.Scraper):
         for obj in self.scrape(**kwargs) or []:
             if hasattr(obj, '__iter__'):
                 for iterobj in obj:
-                    # TODO: Pass in self.output_cache_target
-                    self.output_target.save_object(iterobj)
+                    self.output_target.save_object(iterobj, cache_target=self.cache_target)
             else:
-                # TODO: Pass in self.output_cache_target
-                self.output_target.save_object(obj)
+                self.output_target.save_object(obj, cache_target=self.cache_target)
         record['end'] = utils.utcnow()
         record['skipped'] = getattr(self, 'skipped', 0)
         if not self.output_names:
