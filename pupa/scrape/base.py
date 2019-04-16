@@ -77,6 +77,12 @@ class Scraper(scrapelib.Scraper):
         # TODO: Mimic output target setup
         # TODO: self.output_cache_target = self.get_output_cache_target(os.environ.get('OUTPUT_CACHE_TARGET'))
 
+    def get_cache_target(self, cache_target_name):
+        if cache_target_name == 'REDIS':
+            from pupa.scrape.caches.redis import Redis
+            return Redis()
+        return None
+
     def get_output_target(self, output_target_name):
         if output_target_name == 'GOOGLE_CLOUD_PUBSUB':
             from pupa.scrape.outputs.google_cloud_pubsub import GoogleCloudPubSub
