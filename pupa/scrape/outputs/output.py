@@ -31,6 +31,7 @@ class Output(metaclass=ABCMeta):
 
     @abstractmethod
     def handle_output(self, obj):
+        # TODO: Pass more context to output so multiplle topics/queues can be used
         pass
 
     def pre_handle_output(self, obj, **kwargs):
