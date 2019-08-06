@@ -21,6 +21,7 @@ class AmazonSQS(Output):
         # vote event vs. bill)... so the AMAZON_SQS_QUEUE_PREFIX env var functions
         # as queue prefix, assuming the pattern $QUEUE_PREFIX$TYPE
         self.queue_prefix = os.environ.get('AMAZON_SQS_QUEUE_PREFIX', '')
+        self.queue_sep = os.environ.get('AMAZON_SQS_QUEUE_SEP', '')
         self.default_queue_name = os.environ.get('AMAZON_SQS_QUEUE')
         self.queues = {}
 
@@ -30,7 +31,7 @@ class AmazonSQS(Output):
         self.always_use_s3 = bool(self.always_use_s3)
 
     def handle_output(self, obj, **kwargs):
-        name = self.queue_prefix + kwargs.get('type', self.default_queue_name)
+        name = self.queue_prefix + self.queue_sep + kwargs.get('type', self.default_queue_name)
         queue = self._get_queue(name)
 
         self.scraper.info('send %s %s to queue %s', obj._type, obj, name)
