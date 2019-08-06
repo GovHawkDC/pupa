@@ -16,6 +16,10 @@ class AmazonSQS(Output):
         super().__init__(scraper)
 
         self.sqs = boto3.resource('sqs')
+        # The modifications being made here to push the caching layer closer to the
+        # scrape allow us to publish messages based on different scrape type (e.g.,
+        # vote event vs. bill)... so the AMAZON_SQS_QUEUE_PREFIX env var functions
+        # as queue prefix, assuming the pattern $QUEUE_PREFIX$TYPE
         self.queue_prefix = os.environ.get('AMAZON_SQS_QUEUE_PREFIX', '')
         self.default_queue_name = os.environ.get('AMAZON_SQS_QUEUE')
         self.queues = {}
