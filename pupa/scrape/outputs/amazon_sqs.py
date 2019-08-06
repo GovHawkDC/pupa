@@ -22,6 +22,8 @@ class AmazonSQS(Output):
 
         self.s3 = boto3.resource('s3')
         self.bucket_name = os.environ.get('AMAZON_S3_BUCKET')
+        self.always_use_s3 = os.environ.get('AMAZON_S3_ALWAYS', False)
+        self.always_use_s3 = bool(self.always_use_s3)
 
     def handle_output(self, obj, **kwargs):
         name = self.queue_prefix + kwargs.get('type', self.default_queue_name)
@@ -34,7 +36,7 @@ class AmazonSQS(Output):
         obj_str = self.stringify_obj(obj, True, True)
         encoded_obj_str = obj_str.encode('utf-8')
 
-        if len(encoded_obj_str) > MAX_BYTE_LENGTH:
+        if self.always_use_s3 or len(encoded_obj_str) > MAX_BYTE_LENGTH:
             key = 'S3:{}'.format(str(uuid.uuid4()))
 
             self.scraper.info('put %s %s to bucket %s/%s', obj._type, obj,
