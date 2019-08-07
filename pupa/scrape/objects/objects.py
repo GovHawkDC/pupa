@@ -6,7 +6,7 @@ import json
 def get_obj_attrs(obj):
     """Get object attributes
 
-    :param obj: scrape object
+    :param obj: scrape object as modified dict (@see Output#get_obj_as_dict)
     :type obj: dict
     :returns obj_attrs: object attributes
     :rtype: dict
@@ -50,7 +50,7 @@ def get_obj_attrs(obj):
 def get_obj_hash(obj):
     """Get object hash
 
-    :param obj: scrape object
+    :param obj: scrape object as modified dict (@see Output#get_obj_as_dict)
     :type obj: dict
     :returns obj_hash: object hash
     :rtype: string
