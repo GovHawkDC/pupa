@@ -45,7 +45,7 @@ class Output(metaclass=ABCMeta):
 
         # Check for object key
         if obj_attrs.get('key') is None:
-            self.scraper.info('no cache key found for %s', obj)
+            self.scraper.info('no cache key found for %s; skipping', obj)
             return
 
         cached_obj_hash = cache_target.get(obj_attrs.get('key'))
