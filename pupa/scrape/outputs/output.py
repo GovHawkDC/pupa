@@ -35,7 +35,6 @@ class Output(metaclass=ABCMeta):
 
     def pre_handle_output(self, obj, **kwargs):
         cache_target = kwargs.get('cache_target')
-
         # Handle as normal if no cache target specified
         if cache_target is None:
             self.handle_output(obj)
@@ -43,7 +42,6 @@ class Output(metaclass=ABCMeta):
 
         obj_dict = self.get_obj_as_dict(obj, True, True)
         obj_attrs = obj_helpers.get_obj_attrs(obj_dict)
-
         # Check for object key
         if obj_attrs.get('key') is None:
             self.scraper.info('no cache key found for %s; skipping', obj)
@@ -51,7 +49,6 @@ class Output(metaclass=ABCMeta):
 
         cached_obj_hash = cache_target.get(obj_attrs.get('key'))
         obj_hash = obj_helpers.get_obj_hash(obj_dict)
-
         # Bail if object already processed and cached
         if cached_obj_hash and obj_hash == cached_obj_hash:
             self.scraper.info('%s already cached', obj)
