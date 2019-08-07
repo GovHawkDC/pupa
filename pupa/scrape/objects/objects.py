@@ -12,7 +12,10 @@ def get_obj_attrs(obj):
     :rtype: dict
     """
 
-    obj_type = obj.get('type')
+    try:
+        obj_type = obj.get('type')
+    except AttributeError:
+        return dict(key=None, type=None)
 
     # TODO: Not important, but could probably come up with a better key format
     if obj_type == 'bill':
