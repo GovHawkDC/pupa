@@ -14,8 +14,7 @@ class Redis(Cache):
             host = os.environ.get('REDIS_HOST')
             port = os.environ.get('REDIS_PORT')
             password = os.environ.get('REDIS_PASSWORD')
-            c = redis.Redis(host=host, port=port, password=password
-                            decode_responses=True)
+            c = redis.Redis(host=host, port=port, password=password, decode_responses=True)
             set_conn('REDIS', c)
 
         self.conn = c
