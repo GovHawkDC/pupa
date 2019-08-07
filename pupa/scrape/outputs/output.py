@@ -50,7 +50,7 @@ class Output(metaclass=ABCMeta):
             return
 
         cached_obj_hash = cache_target.get(obj_attrs.get('key'))
-        obj_hash = obj_helpers.get_obj_hash(obj)
+        obj_hash = obj_helpers.get_obj_hash(obj_dict)
 
         # Bail if object already processed and cached
         if cached_obj_hash and obj_hash == cached_obj_hash:
