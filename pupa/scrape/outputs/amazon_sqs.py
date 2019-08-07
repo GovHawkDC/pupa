@@ -30,14 +30,10 @@ class AmazonSQS(Output):
     def handle_output(self, obj, **kwargs):
         name = self.queue_prefix + self.queue_sep + kwargs.get('type', self.default_queue_name)
         queue = self._get_queue(name)
-
         self.scraper.info('send %s %s to queue %s', obj._type, obj, name)
-        self.debug_obj(obj)
 
-        self.add_output_name(obj, name)
         obj_str = self.stringify_obj(obj, True, True)
         encoded_obj_str = obj_str.encode('utf-8')
-
         if self.always_use_s3 or len(encoded_obj_str) > MAX_BYTE_LENGTH:
             key = 'S3:{}'.format(str(uuid.uuid4()))
 

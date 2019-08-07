@@ -12,8 +12,9 @@ class Output(metaclass=ABCMeta):
     def __init__(self, scraper):
         self.scraper = scraper
 
-    def add_output_name(self, obj, output_name):
-        self.scraper.output_names[obj._type].add(output_name)
+    def add_output_name(self, obj):
+        filename = '{0}_{1}.json'.format(obj._type, obj._id).replace('/', '-')
+        self.scraper.output_names[obj._type].add(filename)
 
     def debug_obj(self, obj):
         self.scraper.debug(json.dumps(OrderedDict(sorted(obj.as_dict().items())),
@@ -61,6 +62,8 @@ class Output(metaclass=ABCMeta):
 
     def save_object(self, obj, **kwargs):
         obj.pre_save(self.scraper.jurisdiction.jurisdiction_id)
+        self.debug_obj(obj)
+        self.add_output_name(obj)
 
         self.pre_handle_output(obj, **kwargs)
 
