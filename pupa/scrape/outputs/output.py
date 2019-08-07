@@ -41,7 +41,8 @@ class Output(metaclass=ABCMeta):
             self.handle_output(obj)
             return
 
-        obj_attrs = obj_helpers.get_obj_attrs(obj)
+        obj_dict = self.get_obj_as_dict(obj, True, True)
+        obj_attrs = obj_helpers.get_obj_attrs(obj_dict)
 
         # Check for object key
         if obj_attrs.get('key') is None:
