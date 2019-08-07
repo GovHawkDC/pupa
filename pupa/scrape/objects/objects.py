@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import json
 
 
@@ -26,7 +27,7 @@ def get_obj_attrs(obj):
             type=obj_type,
             jurisdiction=obj['jurisdiction'],
             start_date=obj['start_date'].replace(':00+00:00', '').replace(':', ''),
-            id=md5(obj['name'].encode('utf-8')).hexdigest())
+            id=hashlib.md5(obj['name'].encode('utf-8')).hexdigest())
         return dict(key=obj_key, type=obj_type)
     if obj_type == 'vote_event':
         # NOTE: `obj['bill']` looks like '~{"identifier": "SR 3"}'
@@ -57,7 +58,7 @@ def get_obj_hash(obj):
     deep_obj_copy.pop('_id', None)
 
     stringified_obj = json.dumps(_get_deep_sorted_obj(deep_obj_copy))
-    return md5(stringified_obj.encode('utf-8')).hexdigest()
+    return hashlib.md5(stringified_obj.encode('utf-8')).hexdigest()
 
 
 def _format_key_chunk(key_chunk):

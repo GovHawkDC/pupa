@@ -2,7 +2,6 @@ import json
 
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
-from datetime import datetime, timezone
 
 from pupa import utils
 import pupa.scrape.objects.objects as obj_helpers

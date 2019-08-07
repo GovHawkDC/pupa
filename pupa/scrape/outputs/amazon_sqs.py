@@ -1,10 +1,7 @@
 import boto3
 import os
-import json
 import uuid
-from collections import OrderedDict
 
-from pupa import utils
 from pupa.scrape.outputs.output import Output
 
 MAX_BYTE_LENGTH = 230000
