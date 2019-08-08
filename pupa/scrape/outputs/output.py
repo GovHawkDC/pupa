@@ -55,7 +55,7 @@ class Output(metaclass=ABCMeta):
             return
 
         # Cache and handle as normal
-        cache_target.set(obj_attrs.get('key'), obj_hash)
+        cache_target.set(obj_attrs.get('key'), obj_hash, obj=obj)
         self.handle_output(obj, **obj_attrs)
 
     def save_object(self, obj, **kwargs):

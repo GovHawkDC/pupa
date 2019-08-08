@@ -21,4 +21,8 @@ class Redis(Cache, metaclass=Singleton):
         return self.conn.get(key)
 
     def set(self, key, value, **kwargs):
+        obj = kwargs.get('obj')
+        if obj:
+            self.scraper.info('cache %s %s under key %s', obj._type, obj, key)
+
         return self.conn.set(key, value)
