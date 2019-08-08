@@ -10,14 +10,14 @@ class Redis(Cache):
 
     def __init__(self, scraper, **kwargs):
         super().__init__(scraper)
-        # Workaround for multiple instantiations...
-        if self._conn is None:
-            self.scraper.info('cache checking enabled with redis as target')
-            host = os.environ.get('REDIS_HOST')
-            port = os.environ.get('REDIS_PORT')
-            password = os.environ.get('REDIS_PASSWORD')
-            self._conn = redis.Redis(host=host, port=port, password=password,
-                                     decode_responses=True)
+
+        self.scraper.info('cache checking enabled with redis as target')
+
+        host = os.environ.get('REDIS_HOST')
+        port = os.environ.get('REDIS_PORT')
+        password = os.environ.get('REDIS_PASSWORD')
+        self._conn = redis.Redis(host=host, port=port, password=password,
+                                 decode_responses=True)
 
     def get(self, key, **kwargs):
         return self._conn.get(key)

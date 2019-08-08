@@ -9,18 +9,13 @@ MAX_BYTE_LENGTH = 230000
 
 class AmazonSQS(Output):
 
-    _conn = None
-
     def __init__(self, scraper):
         super().__init__(scraper)
-        # To be honest, I'm not sure if this is necessary w/ boto3; however, quick
-        # workaround to handle multiple instantiations of this class in the scraper
-        if self._conn is None:
-            self.scraper.info('alternative output enabled with amazon sqs as target')
-            self._conn = dict(sqs=boto3.resource('sqs'),
-                              s3=boto3.resource('s3'))
-        self.sqs = self._conn.get('sqs')
-        self.s3 = self._conn.get('s3')
+
+        self.scraper.info('alternative output enabled with amazon sqs as target')
+
+        self.sqs = boto3.resource('sqs')
+        self.s3 = boto3.resource('s3')
 
         # The modifications being made here to push the caching layer closer to the
         # scrape allow us to publish messages based on different scrape type (e.g.,
