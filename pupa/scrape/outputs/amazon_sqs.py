@@ -9,10 +9,19 @@ MAX_BYTE_LENGTH = 230000
 
 class AmazonSQS(Output):
 
+    _conn = None
+
     def __init__(self, scraper):
         super().__init__(scraper)
+        # To be honest, I'm not sure if this is necessary w/ boto3; however, quick
+        # workaround to handle multiple instantiations of this class in the scraper
+        if self._conn is None:
+            self.scraper.info('alternative output enabled with amazon sqs as target')
+            self._conn = dict(sqs=boto3.resource('sqs'),
+                              s3=boto3.resource('s3'))
+        self.sqs = self._conn.get('sqs')
+        self.s3 = self._conn.get('s3')
 
-        self.sqs = boto3.resource('sqs')
         # The modifications being made here to push the caching layer closer to the
         # scrape allow us to publish messages based on different scrape type (e.g.,
         # vote event vs. bill)... so the AMAZON_SQS_QUEUE_PREFIX env var functions
@@ -22,12 +31,9 @@ class AmazonSQS(Output):
         self.default_queue_name = os.environ.get('AMAZON_SQS_QUEUE')
         self.queues = {}
 
-        self.s3 = boto3.resource('s3')
         self.bucket_name = os.environ.get('AMAZON_S3_BUCKET')
         self.always_use_s3 = os.environ.get('AMAZON_S3_ALWAYS', False)
         self.always_use_s3 = bool(self.always_use_s3)
-
-        self.scraper.info('alternative output enabled with amazon sqs as target')
 
     def handle_output(self, obj, **kwargs):
         name = self.queue_prefix + self.queue_sep + kwargs.get('type', self.default_queue_name)

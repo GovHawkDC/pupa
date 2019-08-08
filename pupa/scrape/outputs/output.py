@@ -1,14 +1,13 @@
 import json
 
-from abc import abstractmethod
+from abc import abstractmethod, ABCMeta
 from collections import OrderedDict
 
 from pupa import utils
-from pupa.scrape.connections.singleton import SingletonABCMeta
 import pupa.scrape.objects.objects as obj_helpers
 
 
-class Output(metaclass=SingletonABCMeta):
+class Output(metaclass=ABCMeta):
 
     def __init__(self, scraper):
         self.scraper = scraper

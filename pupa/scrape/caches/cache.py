@@ -1,9 +1,7 @@
-from abc import abstractmethod
-
-from pupa.scrape.connections.singleton import SingletonABCMeta
+from abc import abstractmethod, ABCMeta
 
 
-class Cache(metaclass=SingletonABCMeta):
+class Cache(metaclass=ABCMeta):
 
     def __init__(self, scraper):
         self.scraper = scraper
