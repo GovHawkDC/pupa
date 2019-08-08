@@ -2,12 +2,13 @@ import boto3
 import os
 import uuid
 
+from pupa.scrape.connections.singleton import Singleton
 from pupa.scrape.outputs.output import Output
 
 MAX_BYTE_LENGTH = 230000
 
 
-class AmazonSQS(Output):
+class AmazonSQS(Output, metaclass=Singleton):
 
     def __init__(self, scraper):
         super().__init__(scraper)
@@ -26,6 +27,8 @@ class AmazonSQS(Output):
         self.bucket_name = os.environ.get('AMAZON_S3_BUCKET')
         self.always_use_s3 = os.environ.get('AMAZON_S3_ALWAYS', False)
         self.always_use_s3 = bool(self.always_use_s3)
+
+        self.scraper.info('alternative output enabled with amazon sqs as target')
 
     def handle_output(self, obj, **kwargs):
         name = self.queue_prefix + self.queue_sep + kwargs.get('type', self.default_queue_name)
