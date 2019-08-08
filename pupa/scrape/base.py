@@ -10,6 +10,9 @@ import scrapelib
 from pupa import utils
 from pupa import settings
 from pupa.exceptions import ScrapeError, ScrapeValueError
+from pupa.scrape.caches.redis import Redis
+from pupa.scrape.outputs.amazon_sqs import AmazonSQS
+from pupa.scrape.outputs.local_file import LocalFile
 
 
 @FormatChecker.cls_checks('uri-blank')
@@ -76,17 +79,12 @@ class Scraper(scrapelib.Scraper):
 
     def get_cache_target(self, cache_target_name):
         if cache_target_name == 'REDIS':
-            self.info('cache checking enabled with redis as target')
-            from pupa.scrape.caches.redis import Redis
-            return Redis()
+            return Redis(self)
         return None
 
     def get_output_target(self, output_target_name):
         if output_target_name == 'AMAZON_SQS':
-            self.info('alternative output enabled with amazon sqs as target')
-            from pupa.scrape.outputs.amazon_sqs import AmazonSQS
             return AmazonSQS(self)
-        from pupa.scrape.outputs.local_file import LocalFile
         return LocalFile(self)
 
     def do_scrape(self, **kwargs):
