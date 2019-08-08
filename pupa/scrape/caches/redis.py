@@ -2,10 +2,9 @@ import os
 import redis
 
 from pupa.scrape.caches.cache import Cache
-from pupa.scrape.connections.singleton import Singleton
 
 
-class Redis(Cache, metaclass=Singleton):
+class Redis(Cache):
 
     def __init__(self, scraper, **kwargs):
         super().__init__(scraper)

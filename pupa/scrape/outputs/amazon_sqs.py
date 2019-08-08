@@ -2,13 +2,12 @@ import boto3
 import os
 import uuid
 
-from pupa.scrape.connections.singleton import Singleton
 from pupa.scrape.outputs.output import Output
 
 MAX_BYTE_LENGTH = 230000
 
 
-class AmazonSQS(Output, metaclass=Singleton):
+class AmazonSQS(Output):
 
     def __init__(self, scraper):
         super().__init__(scraper)
