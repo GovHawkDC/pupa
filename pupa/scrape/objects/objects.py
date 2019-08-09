@@ -1,6 +1,7 @@
 import copy
 import hashlib
-import json
+
+import ujson
 
 
 def get_obj_attrs(obj):
@@ -34,7 +35,7 @@ def get_obj_attrs(obj):
         return dict(key=obj_key, type=obj_type)
     if obj_type == 'vote_event':
         # NOTE: `obj['bill']` looks like '~{"identifier": "SR 3"}'
-        bill = json.loads(obj['bill'][1:]) if 'bill' in obj else dict()
+        bill = ujson.loads(obj['bill'][1:]) if 'bill' in obj else dict()
         obj_key = '{type}-{jurisdiction}-{session}-{id}-{motion_text}-{start_date}'.format(
             type=obj_type,
             jurisdiction=obj['jurisdiction'],
@@ -56,12 +57,11 @@ def get_obj_hash(obj):
     :rtype: string
     """
 
-    # TODO: Do we need to deep copy? Is _id key required anywhere else?
-    deep_obj_copy = copy.deepcopy(obj)
-    deep_obj_copy.pop('_id', None)
+    o = copy.deepcopy(obj)
+    o.pop('_id', None)
 
-    stringified_obj = json.dumps(_get_deep_sorted_obj(deep_obj_copy))
-    return hashlib.md5(stringified_obj.encode('utf-8')).hexdigest()
+    s = ujson.dumps(_get_deep_sorted_obj(o))
+    return hashlib.md5(s.encode('utf-8')).hexdigest()
 
 
 def _format_key_chunk(key_chunk):

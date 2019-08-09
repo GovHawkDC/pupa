@@ -28,6 +28,7 @@ pupa = pupa.cli.__main__:main''',
           'google-cloud-pubsub==0.30.1',
           'boto3==1.5.18',
           'redis==3.2.1',
+          'ujson==1.34',
       ],
       extras_require={
           'dev': [
