@@ -23,12 +23,11 @@ pupa = pupa.cli.__main__:main''',
           'dj_database_url>=0.3.0',
           'scrapelib>=1.0',
           'jsonschema>=2.6.0',
-          'psycopg2',
           'pytz',
           'google-cloud-pubsub==0.30.1',
           'boto3==1.5.18',
           'redis==3.2.1',
-          'ujson==1.34',
+          'ujson==1.35',
       ],
       extras_require={
           'dev': [
