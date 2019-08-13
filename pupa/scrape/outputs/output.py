@@ -4,7 +4,7 @@ from abc import abstractmethod, ABCMeta
 from collections import OrderedDict
 
 from pupa import utils
-import pupa.scrape.objects.objects as obj_helpers
+from pupa.scrape.objects.objects import get_obj_attrs, get_obj_hash
 
 
 class Output(metaclass=ABCMeta):
@@ -41,14 +41,14 @@ class Output(metaclass=ABCMeta):
             return
 
         obj_dict = self.get_obj_as_dict(obj, True, True)
-        obj_attrs = obj_helpers.get_obj_attrs(obj_dict)
+        obj_attrs = get_obj_attrs(obj_dict)
         # Check for object key
         if obj_attrs.get('key') is None:
             self.scraper.info('no cache key found for %s; skipping', obj)
             return
 
         cached_obj_hash = cache_target.get(obj_attrs.get('key'))
-        obj_hash = obj_helpers.get_obj_hash(obj_dict)
+        obj_hash = get_obj_hash(obj_dict)
         # Bail if object already processed and cached
         if cached_obj_hash and obj_hash == cached_obj_hash:
             self.scraper.info('%s already cached', obj)
