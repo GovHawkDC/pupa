@@ -1,5 +1,7 @@
 import copy
+import datetime
 import hashlib
+import pytz
 
 import ujson
 
@@ -91,4 +93,11 @@ def _get_deep_sorted_obj(obj):
         return sorted((k, _get_deep_sorted_obj(v)) for k, v in obj.items())
     if isinstance(obj, (list, tuple,)):
         return sorted(_get_deep_sorted_obj(v) for v in obj)
+    # Copying over handling from JSONEncoderPlus for datetimes
+    if isinstance(obj, datetime.datetime):
+        if obj.tzinfo is None:
+            raise TypeError("date '%s' is not fully timezone qualified." % (obj))
+        return obj.astimezone(pytz.UTC).isoformat()
+    if isinstance(obj, datetime.date):
+        return obj.isoformat()
     return obj
