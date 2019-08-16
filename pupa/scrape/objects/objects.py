@@ -32,7 +32,7 @@ def get_obj_attrs(obj):
         obj_key = '{type}-{jurisdiction}-{start_date}-{id}'.format(
             type=obj_type,
             jurisdiction=obj['jurisdiction'],
-            start_date=obj['start_date'].replace(':00+00:00', '').replace(':', ''),
+            start_date=_to_simple_type(obj['start_date']).replace(':00+00:00', '').replace(':', ''),
             id=hashlib.md5(obj['name'].encode('utf-8')).hexdigest())
         return dict(key=obj_key, type=obj_type)
     if obj_type == 'vote_event':
@@ -45,7 +45,7 @@ def get_obj_attrs(obj):
             # TODO: Do we want to use a default ID?
             id=_format_key_chunk(bill.get('identifier', 'EMPTY_BILL_NAME')),
             motion_text=_format_key_chunk(obj['motion_text']),
-            start_date=obj['start_date'])
+            start_date=_to_simple_type(obj['start_date']))
         return dict(key=obj_key, type=obj_type)
     return dict(key=None, type=None)
 
@@ -93,11 +93,25 @@ def _get_deep_sorted_obj(obj):
         return sorted((k, _get_deep_sorted_obj(v)) for k, v in obj.items())
     if isinstance(obj, (list, tuple,)):
         return sorted(_get_deep_sorted_obj(v) for v in obj)
-    # Copying over handling from JSONEncoderPlus for datetimes
-    if isinstance(obj, datetime.datetime):
-        if obj.tzinfo is None:
-            raise TypeError("date '%s' is not fully timezone qualified." % (obj))
-        return obj.astimezone(pytz.UTC).isoformat()
-    if isinstance(obj, datetime.date):
-        return obj.isoformat()
-    return obj
+    return _to_simple_type(obj)
+
+
+def _to_simple_type(val):
+    """What's "simple" anyway? ... But we need a way to transform some types on
+    the fly due to some of this data being JSON-decoded before (e.g., account
+    for Python's datetime.* instances)
+
+    NOTE: Copying over handling from JSONEncoderPlus for datetimes
+
+    :param val: val to maybe transform
+    :type val: mixed
+    :rtype: mixed
+    """
+
+    if isinstance(val, datetime.datetime):
+        if val.tzinfo is None:
+            raise TypeError("date '%s' is not fully timezone qualified." % (val))
+        return val.astimezone(pytz.UTC).isoformat()
+    if isinstance(val, datetime.date):
+        return val.isoformat()
+    return val
